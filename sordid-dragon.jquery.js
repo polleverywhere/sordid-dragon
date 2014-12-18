@@ -1,8 +1,7 @@
-// jQuery The Sordid Dragon
+// jQuery the Sordid Dragon
 // Copyright 2014 Poll Everywhere
-// Paul Cortens and Mike Foley
+// Paul Cortens & Mike Foley
 // Version 0.0.1
-
 
 (function ($) {
   $.fn.sordidDragon = function (options) {
@@ -34,7 +33,7 @@
             return i;
           }
         }
-      }
+      };
 
       $child.on("touchstart", function(e) {
         $ghost.html($child.clone());
@@ -83,5 +82,5 @@
         e.preventDefault();
       });
     });
-  }
+  };
 })(jQuery);
