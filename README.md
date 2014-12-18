@@ -1,4 +1,6 @@
 Sordid Dragon
 =============
 
-See example.html. 'Nuf said.
+jQuery plugin for vertical sorting on touch devices.
+
+Does not work on non-touch devices.
