@@ -10,26 +10,36 @@
     var $ghost = $("<div></div>");
     $ghost.addClass("sordidDragon-ghost");
     $ghost.css({
-      position: "absolute",
+      position: "fixed",
       left: "-999999px",
       top: "-999999px",
       opacity: 1
     });
     $parent.append($ghost);
 
-    var positions = [];
+    var _positions;
+    var positions = function() {
+      if (!_positions) {
+        _positions = [];
+
+        $parent.children().each(function(index, child) {
+          var $child = $(child);
+          _positions.push([
+            $child.offset().top,
+            $child.offset().top + $child.outerHeight()
+          ]);
+        });
+      }
+
+      return _positions;
+    };
 
     $parent.children().each(function(index, child) {
       var $child = $(child);
 
-      positions.push([
-        $child.position().top,
-        $child.position().top + $child.outerHeight()
-      ]);
-
       var currentPosition = function(touch) {
-        for (var i = 0; i < positions.length; i++) {
-          if ( touch.pageY >= positions[i][0] && touch.pageY < positions[i][1] ) {
+        for (var i = 0; i < positions().length; i++) {
+          if ( touch.pageY >= positions()[i][0] && touch.pageY < positions()[i][1] ) {
             return i;
           }
         }
@@ -45,8 +55,7 @@
         var touch = e.originalEvent.targetTouches[0];
 
         $ghost.css({
-          position: "absolute",
-          left: $child.position().left,
+          left: $child.offset().left,
           top: touch.pageY - ($child.outerHeight() / 2) + "px",
           width: $child.outerWidth()
         });
