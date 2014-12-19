@@ -50,18 +50,18 @@
     // create a ghost under the cursor for us. That doesn't happen with touch
     // events, so we create one ourselves.
     var useGhost = function(e) {
-      return isTouch(e) || ($.browser.ie && parseInt($.browser.version) == 9);
-    }
+      return isTouch(e) || ($.browser.ie && parseInt($.browser.version, 10) == 9);
+    };
     var isTouch = function(e) {
       return (/touch/).test(e.type);
-    }
+    };
 
     $parent.children().each(function(index, child) {
       var $child = $(child);
       $child.attr("draggable", "true");
 
       // Setting draggable=true doesn't work in IE9. We must call dragDrop().
-      if ( $.browser.ie && parseInt($.browser.version) == 9 ) {
+      if ( $.browser.ie && parseInt($.browser.version, 10) == 9 ) {
         $child.on("selectstart", function() {
           if (this.dragDrop) {
             this.dragDrop();
@@ -74,7 +74,7 @@
       // IE10 won't tell us the _current_ position of the mouse during drag or dragenter events.
       // IE11 won't tell us the _current_ position of the mouse during drag events.
       // This helps us keep track of it manually.
-      if ( $.browser.ie && (parseInt($.browser.version) == 10 || parseInt($.browser.version) == 11 )) {
+      if ( $.browser.ie && (parseInt($.browser.version, 10) == 10 || parseInt($.browser.version, 10) == 11 )) {
         $child.on("dragenter", function(e) {
           iePageY = $child.offset().top + ($child.outerHeight() / 2);
         });
