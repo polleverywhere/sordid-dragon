@@ -1,7 +1,7 @@
 // jQuery the Sordid Dragon
 // Copyright 2014 Poll Everywhere
 // Paul Cortens & Mike Foley
-// Version 0.0.2
+// Version 0.0.3
 
 (function ($) {
   $.fn.sordidDragon = function (options) {
@@ -19,6 +19,9 @@
       opacity: 1
     });
     $parent.append($ghost);
+
+
+    var $childBeingMoved;
 
     var _positions;
     var positions = function() {
@@ -88,20 +91,46 @@
 
 
       $child.on("touchstart dragstart", function(e) {
+        // We must pre-cache the positions after they have been rendered, but
+        // before anything has changed. Otherwise the extra elements we create
+        // during the drag process will interfere.
+        positions();
+
         if ( useGhost(e) ) {
           $ghost.html($child.clone());
         }
+
+        // Windows touch devices (such as the Microsoft Surface Pro 3) will end
+        // the drag event early (and not call dragend) if the element being
+        // dragged is moved in the DOM by JavaScript.
+        // To work around that problem we:
+        //   1) clone the element being moved
+        //   2) hide the element being moved
+        //   3) move the clone around in the DOM
+        // Then we clean it all up in the dragend event.
+        $childBeingMoved = $child.clone();
+
         preventTouchDefault(e);
       });
 
 
       $child.on("touchmove drag", function(e) {
+
+        // Hide the element being moved and replace it with the clone.
+        $child.hide();
+        if (!$childBeingMoved.is(":visible") ) {
+          $child.after($childBeingMoved);
+        }
+
         var pageY;
         if ( iePageY ) {
+          // IE10/11
           pageY = iePageY;
         } else if ( e.originalEvent.targetTouches ) {
+          // Touch devices
           pageY = e.originalEvent.targetTouches[0].pageY;
         } else {
+          // Desktop devices
           pageY = e.originalEvent.pageY;
         }
 
@@ -113,17 +142,20 @@
           });
         }
 
-        $child.css({
+        $childBeingMoved.css({
           opacity: 0.5
         });
 
         var newPosition = currentPosition(pageY);
+
         if (typeof newPosition !== "undefined") {
-          var $moveTo = $($parent.children()[newPosition]);
-          if ($moveTo.index() > $child.index()) {
-            $moveTo.after($child.detach());
-          } else if ($moveTo.index() < $child.index()) {
-            $moveTo.before($child.detach());
+          var $children = $parent.children(":visible");
+          var $moveTo = $($children[newPosition]);
+
+          if (newPosition > $children.index($childBeingMoved)) {
+            $moveTo.after($childBeingMoved.detach());
+          } else if (newPosition < $children.index($childBeingMoved)) {
+            $moveTo.before($childBeingMoved.detach());
           }
         }
 
@@ -132,6 +164,10 @@
 
 
       $child.on("touchend dragend", function(e) {
+        $childBeingMoved.after($child);
+        $childBeingMoved.remove();
+        $child.show();
+
         if ( useGhost(e) ) {
           $ghost.html("").css({
             left: "-999999px",
@@ -140,9 +176,6 @@
           });
         }
 
-        $child.css({
-          opacity: 1
-        });
         preventTouchDefault(e);
       });
     });
