@@ -23,21 +23,21 @@
 
     var $childBeingMoved;
 
-    var _positions;
+    var cachedPositions;
     var positions = function() {
-      if (!_positions) {
-        _positions = [];
+      if (!cachedPositions) {
+        cachedPositions = [];
 
         $parent.children().each(function(index, child) {
           var $child = $(child);
-          _positions.push([
+          cachedPositions.push([
             $child.offset().top,
             $child.offset().top + $child.outerHeight()
           ]);
         });
       }
 
-      return _positions;
+      return cachedPositions;
     };
 
     var isTouch = function(e) {
