@@ -40,10 +40,8 @@
       return _positions;
     };
 
-    var preventTouchDefault = function(e) {
-      if ( isTouch(e) ) {
-        e.preventDefault();
-      }
+    var isTouch = function(e) {
+      return (/touch/).test(e.type);
     };
 
     // In most (but not all) browsers that support drag events, the browser will
@@ -52,8 +50,11 @@
     var useGhost = function(e) {
       return isTouch(e) || ($.browser.ie && parseInt($.browser.version, 10) == 9);
     };
-    var isTouch = function(e) {
-      return (/touch/).test(e.type);
+
+    var preventTouchDefault = function(e) {
+      if ( isTouch(e) ) {
+        e.preventDefault();
+      }
     };
 
     $parent.children().each(function(index, child) {
