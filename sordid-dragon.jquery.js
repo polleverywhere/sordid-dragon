@@ -34,36 +34,57 @@
       return _positions;
     };
 
+    var preventTouchDefault = function(e) {
+      if ( isTouch(e) ) {
+        e.preventDefault();
+      }
+    };
+
+    var isTouch = function(e) {
+      return (/touch/).test(e.type);
+    }
+
     $parent.children().each(function(index, child) {
       var $child = $(child);
+      $child.attr("draggable", "true");
 
-      var currentPosition = function(touch) {
+      var currentPosition = function(pageY) {
         for (var i = 0; i < positions().length; i++) {
-          if ( touch.pageY >= positions()[i][0] && touch.pageY < positions()[i][1] ) {
+          if ( pageY >= positions()[i][0] && pageY < positions()[i][1] ) {
             return i;
           }
         }
       };
 
-      $child.on("touchstart", function(e) {
-        $ghost.html($child.clone());
-        e.preventDefault();
+      $child.on("touchstart dragstart", function(e) {
+        if ( isTouch(e) ) {
+          $ghost.html($child.clone());
+        }
+        preventTouchDefault(e);
       });
 
 
-      $child.on("touchmove", function(e) {
-        var touch = e.originalEvent.targetTouches[0];
+      $child.on("touchmove drag", function(e) {
+        var pageY;
+        if ( e.originalEvent.targetTouches ) {
+          pageY = e.originalEvent.targetTouches[0].pageY;
+        } else {
+          pageY = e.originalEvent.y;
+        }
 
-        $ghost.css({
-          left: $child.offset().left,
-          top: touch.pageY - ($child.outerHeight() / 2) + "px",
-          width: $child.outerWidth()
-        });
+        if ( isTouch(e) ) {
+          $ghost.css({
+            left: $child.offset().left,
+            top: pageY - ($child.outerHeight() / 2) + "px",
+            width: $child.outerWidth()
+          });
+        }
+
         $child.css({
           opacity: 0.5
         });
 
-        var newPosition = currentPosition(touch);
+        var newPosition = currentPosition(pageY);
         if (typeof newPosition !== "undefined") {
           var $moveTo = $($parent.children()[newPosition]);
           if ($moveTo.index() > $child.index()) {
@@ -73,22 +94,23 @@
           }
         }
 
-        e.preventDefault();
+        preventTouchDefault(e);
       });
 
 
-      $child.on("touchend", function(e) {
-        $ghost.html("");
-        $ghost.css({
-          left: "-999999px",
-          top: "-999999px",
-          width: "0px"
-        });
+      $child.on("touchend dragend", function(e) {
+        if ( isTouch(e) ) {
+          $ghost.html("").css({
+            left: "-999999px",
+            top: "-999999px",
+            width: "0px"
+          });
+        }
 
         $child.css({
           opacity: 1
         });
-        e.preventDefault();
+        preventTouchDefault(e);
       });
     });
   };

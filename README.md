@@ -1,6 +1,6 @@
 Sordid Dragon
 =============
 
-jQuery plugin for vertical sorting on touch devices.
+jQuery plugin for vertical sorting on devices that support touch or drag events.
 
-Does not work on non-touch devices.
+Does not yet fully work on non-touch devices.
