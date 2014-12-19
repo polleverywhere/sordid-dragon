@@ -1,11 +1,14 @@
 // jQuery the Sordid Dragon
 // Copyright 2014 Poll Everywhere
 // Paul Cortens & Mike Foley
-// Version 0.0.1
+// Version 0.0.2
 
 (function ($) {
   $.fn.sordidDragon = function (options) {
     var $parent = this;
+
+    // Used to store the current mouse position used by IE hacks.
+    var iePageY;
 
     var $ghost = $("<div></div>");
     $ghost.addClass("sordidDragon-ghost");
@@ -40,6 +43,12 @@
       }
     };
 
+    // In most (but not all) browsers that support drag events, the browser will
+    // create a ghost under the cursor for us. That doesn't happen with touch
+    // events, so we create one ourselves.
+    var useGhost = function(e) {
+      return isTouch(e) || ($.browser.ie && parseInt($.browser.version) == 9);
+    }
     var isTouch = function(e) {
       return (/touch/).test(e.type);
     }
@@ -47,6 +56,27 @@
     $parent.children().each(function(index, child) {
       var $child = $(child);
       $child.attr("draggable", "true");
+
+      // Setting draggable=true doesn't work in IE9. We must call dragDrop().
+      if ( $.browser.ie && parseInt($.browser.version) == 9 ) {
+        $child.on("selectstart", function() {
+          if (this.dragDrop) {
+            this.dragDrop();
+          }
+          return false;
+        });
+      }
+
+
+      // IE10 won't tell us the _current_ position of the mouse during drag or dragenter events.
+      // IE11 won't tell us the _current_ position of the mouse during drag events.
+      // This helps us keep track of it manually.
+      if ( $.browser.ie && (parseInt($.browser.version) == 10 || parseInt($.browser.version) == 11 )) {
+        $child.on("dragenter", function(e) {
+          iePageY = $child.offset().top + ($child.outerHeight() / 2);
+        });
+      }
+
 
       var currentPosition = function(pageY) {
         for (var i = 0; i < positions().length; i++) {
@@ -56,8 +86,9 @@
         }
       };
 
+
       $child.on("touchstart dragstart", function(e) {
-        if ( isTouch(e) ) {
+        if ( useGhost(e) ) {
           $ghost.html($child.clone());
         }
         preventTouchDefault(e);
@@ -66,13 +97,15 @@
 
       $child.on("touchmove drag", function(e) {
         var pageY;
-        if ( e.originalEvent.targetTouches ) {
+        if ( iePageY ) {
+          pageY = iePageY;
+        } else if ( e.originalEvent.targetTouches ) {
           pageY = e.originalEvent.targetTouches[0].pageY;
         } else {
-          pageY = e.originalEvent.y;
+          pageY = e.originalEvent.pageY;
         }
 
-        if ( isTouch(e) ) {
+        if ( useGhost(e) ) {
           $ghost.css({
             left: $child.offset().left,
             top: pageY - ($child.outerHeight() / 2) + "px",
@@ -99,7 +132,7 @@
 
 
       $child.on("touchend dragend", function(e) {
-        if ( isTouch(e) ) {
+        if ( useGhost(e) ) {
           $ghost.html("").css({
             left: "-999999px",
             top: "-999999px",
