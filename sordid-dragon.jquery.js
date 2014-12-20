@@ -64,7 +64,7 @@
 
       // Setting draggable=true doesn't work in IE9. We must call dragDrop().
       if ( $.browser.ie && parseInt($.browser.version, 10) == 9 ) {
-        $child.on("selectstart", function() {
+        $child.on("selectstart.sordidDragon", function() {
           if (this.dragDrop) {
             this.dragDrop();
           }
@@ -77,7 +77,7 @@
       // IE11 won't tell us the _current_ position of the mouse during drag events.
       // This helps us keep track of it manually.
       if ( $.browser.ie && (parseInt($.browser.version, 10) == 10 || parseInt($.browser.version, 10) == 11 )) {
-        $child.on("dragenter", function(e) {
+        $child.on("dragenter.sordidDragon", function(e) {
           customPageY = $child.offset().top + ($child.outerHeight() / 2);
         });
       }
@@ -85,7 +85,7 @@
       // Firefox won't tell us the position of the mouse during drag events.
       // This helps us keep track of it manually.
       if ( $.browser.firefox ) {
-        $child.on("dragover", function(e) {
+        $child.on("dragover.sordidDragon", function(e) {
           customPageY = e.originalEvent.pageY;
         });
       }
@@ -100,7 +100,7 @@
       };
 
 
-      $child.on("touchstart dragstart", function(e) {
+      $child.on("touchstart.sordidDragon dragstart.sordidDragon", function(e) {
         // We must pre-cache the positions after they have been rendered, but
         // before anything has changed. Otherwise the extra elements we create
         // during the drag process will interfere.
@@ -131,7 +131,7 @@
       });
 
 
-      $child.on("touchmove drag", function(e) {
+      $child.on("touchmove.sordidDragon drag.sordidDragon", function(e) {
         // Hide the element being moved and replace it with the clone.
         $child.hide();
         if (!$childBeingMoved.is(":visible") ) {
@@ -181,7 +181,7 @@
       });
 
 
-      $child.on("touchend dragend", function(e) {
+      $child.on("touchend.sordidDragon dragend.sordidDragon", function(e) {
         $childBeingMoved.after($child);
         $childBeingMoved.remove();
         $child.show();
