@@ -1,6 +1,7 @@
 // jQuery the Sordid Dragon
 // Copyright 2014 Poll Everywhere
 // Paul Cortens & Mike Foley
+// https://github.com/polleverywhere/sordid-dragon
 // Version 0.0.5
 
 (function ($) {

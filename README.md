@@ -3,10 +3,11 @@ Sordid Dragon
 
 jQuery plugin for vertical sorting
 
-Works on:
+Tested on:
 * Chrome
 * Firefox
 * IE8-11
+* Safari
 * Android
 * iOS
 * Microsoft Surface
