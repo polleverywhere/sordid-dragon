@@ -87,7 +87,7 @@
       // Firefox and IE 11 won't tell us the position of the mouse during drag
       // events. But they will for dragover (and dragenter) events, so we store
       // that so we can use it in the drag events.
-      if ( $.browser.firefox || ($.browser.ie && parseInt($.browser.version, 10) == 11)) {
+      if ( $.browser.mozilla || ($.browser.ie && parseInt($.browser.version, 10) == 11)) {
         $child.on("dragover.sordidDragon", function(e) {
           customPageY = e.originalEvent.pageY;
         });
