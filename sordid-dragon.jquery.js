@@ -23,21 +23,21 @@
 
     var $childBeingMoved;
 
-    var cachedPositions;
-    var positions = function() {
-      if (!cachedPositions) {
-        cachedPositions = [];
+    var positions;
+    var calculatePositions = function() {
+      if (!positions) {
+        positions = [];
 
         $parent.children().each(function(index, child) {
           var $child = $(child);
-          cachedPositions.push([
+          positions.push([
             $child.offset().top,
             $child.offset().top + $child.outerHeight()
           ]);
         });
       }
 
-      return cachedPositions;
+      return positions;
     };
 
     var isTouch = function(e) {
@@ -83,8 +83,8 @@
 
 
       var currentPosition = function(pageY) {
-        for (var i = 0; i < positions().length; i++) {
-          if ( pageY >= positions()[i][0] && pageY < positions()[i][1] ) {
+        for (var i = 0; i < positions.length; i++) {
+          if ( pageY >= positions[i][0] && pageY < positions[i][1] ) {
             return i;
           }
         }
@@ -95,7 +95,7 @@
         // We must pre-cache the positions after they have been rendered, but
         // before anything has changed. Otherwise the extra elements we create
         // during the drag process will interfere.
-        positions();
+        calculatePositions();
 
         if ( useGhost(e) ) {
           $ghost.html($child.clone());
