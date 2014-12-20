@@ -1,14 +1,15 @@
 // jQuery the Sordid Dragon
 // Copyright 2014 Poll Everywhere
 // Paul Cortens & Mike Foley
-// Version 0.0.3
+// Version 0.0.4
 
 (function ($) {
   $.fn.sordidDragon = function (options) {
     var $parent = this;
 
-    // Used to store the current mouse position used by IE hacks.
-    var iePageY;
+    // Used to store the current mouse position for browsers that don't expose
+    // that on "drag" events.
+    var customPageY;
 
     var $ghost = $("<div></div>");
     $ghost.addClass("sordidDragon-ghost");
@@ -77,7 +78,15 @@
       // This helps us keep track of it manually.
       if ( $.browser.ie && (parseInt($.browser.version, 10) == 10 || parseInt($.browser.version, 10) == 11 )) {
         $child.on("dragenter", function(e) {
-          iePageY = $child.offset().top + ($child.outerHeight() / 2);
+          customPageY = $child.offset().top + ($child.outerHeight() / 2);
+        });
+      }
+
+      // Firefox won't tell us the position of the mouse during drag events.
+      // This helps us keep track of it manually.
+      if ( $.browser.firefox ) {
+        $child.on("dragover", function(e) {
+          customPageY = e.originalEvent.pageY;
         });
       }
 
@@ -96,6 +105,13 @@
         // before anything has changed. Otherwise the extra elements we create
         // during the drag process will interfere.
         calculatePositions();
+
+
+        // Firefox won't trigger "drag" events without this.
+        var dt = e.originalEvent.dataTransfer;
+        if ( dt ) {
+          dt.setData("text", "");
+        }
 
         if ( useGhost(e) ) {
           $ghost.html($child.clone());
@@ -116,7 +132,6 @@
 
 
       $child.on("touchmove drag", function(e) {
-
         // Hide the element being moved and replace it with the clone.
         $child.hide();
         if (!$childBeingMoved.is(":visible") ) {
@@ -124,9 +139,11 @@
         }
 
         var pageY;
-        if ( iePageY ) {
-          // IE10/11
-          pageY = iePageY;
+        if ( customPageY ) {
+          // This must be before the general Desktop option (e.originalEvent.pageY)
+          // because in IE10/11 that value is set, but it will be the starting
+          // position of the mouse, which is not what we want here.
+          pageY = customPageY;
         } else if ( e.originalEvent.targetTouches ) {
           // Touch devices
           pageY = e.originalEvent.targetTouches[0].pageY;
