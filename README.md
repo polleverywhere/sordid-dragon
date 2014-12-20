@@ -14,6 +14,11 @@ Doesn't yet fully work on:
 * IE8
 
 
+Dependencies
+============
+jQuery `$.browser` (moved to jQuery Migrate in 1.9)
+
+
 TODO
 ====
 
@@ -24,5 +29,3 @@ Ensure it works with elements of differing heights.
 On desktop chrome, the browser animation makes it look like the change didn't work, even though it did.
 
 Add way to removing (turn off) for a given DOM element.
-
-Namespace all events.
