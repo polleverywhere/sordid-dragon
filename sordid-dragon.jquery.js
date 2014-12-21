@@ -14,12 +14,16 @@
 
     var $ghost = $("<div></div>");
     $ghost.addClass("sordidDragon-ghost");
-    $ghost.css({
-      position: "fixed",
-      left: "-999999px",
-      top: "-999999px",
-      opacity: 0
-    });
+    $ghost.css({position: "fixed"});
+    var hideGhost = function() {
+      $ghost.css({
+        left: "-999999px",
+        top: "-999999px",
+        width: "0px",
+        opacity: 0
+      });
+    };
+    hideGhost();
     $parent.append($ghost);
 
 
@@ -30,7 +34,7 @@
       if (!positions) {
         positions = [];
 
-        $parent.children().each(function(index, child) {
+        $parent.children().each(function(_, child) {
           var $child = $(child);
           positions.push([
             $child.offset().top,
@@ -59,7 +63,7 @@
       }
     };
 
-    $parent.children().each(function(index, child) {
+    $parent.children().each(function(_, child) {
       var $child = $(child);
       $child.attr("draggable", "true");
 
@@ -95,7 +99,7 @@
 
 
       var currentPosition = function(pageY) {
-        for (var i = 0; i < positions.length; i++) {
+        for (var i = 0, positionsLength = positions.length; i < positionsLength; i++) {
           if ( pageY >= positions[i][0] && pageY < positions[i][1] ) {
             return i;
           }
@@ -158,7 +162,7 @@
         if ( useGhost(e) ) {
           $ghost.css({
             left: $child.offset().left,
-            top: pageY - ($child.outerHeight() / 2) + "px",
+            top: pageY - ($child.outerHeight() / 2),
             width: $child.outerWidth(),
             opacity: 1
           });
@@ -172,7 +176,7 @@
 
         if (typeof newPosition !== "undefined") {
           var $children = $parent.children(":visible");
-          var $moveTo = $($children[newPosition]);
+          var $moveTo = $children.eq(newPosition);
 
           if (newPosition > $children.index($childBeingMoved)) {
             $moveTo.after($childBeingMoved.detach());
@@ -191,12 +195,7 @@
         $child.show();
 
         if ( useGhost(e) ) {
-          $ghost.html("").css({
-            left: "-999999px",
-            top: "-999999px",
-            width: "0px",
-            opacity: 0
-          });
+          hideGhost();
         }
 
         preventTouchDefault(e);
