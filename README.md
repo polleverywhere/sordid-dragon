@@ -21,8 +21,8 @@ jQuery `$.browser` (moved to jQuery Migrate in 1.9)
 TODO
 ====
 
-Ensure it works with elements of differing heights.
-
-On desktop chrome, the browser animation makes it look like the change didn't work, even though it did.
+Remove flickering on desktops when elements are of different heights.
 
 Add way to removing (turn off) for a given DOM element.
+
+Add option for specifying a "handle".

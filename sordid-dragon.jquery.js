@@ -33,17 +33,15 @@
 
     var positions;
     var calculatePositions = function() {
-      if (!positions) {
-        positions = [];
+      positions = [];
 
-        $parent.children().each(function(_, child) {
-          var $child = $(child);
-          positions.push([
-            $child.offset().top,
-            $child.offset().top + $child.outerHeight()
-          ]);
-        });
-      }
+      $parent.children().each(function(_, child) {
+        var $child = $(child);
+        positions.push([
+          $child.offset().top,
+          $child.offset().top + $child.outerHeight()
+        ]);
+      });
 
       return positions;
     };
@@ -215,6 +213,11 @@
         if ( useGhost(e) ) {
           hideGhost();
         }
+
+        // We must recalculate the positions because in the case where items
+        // are not all the same height, we would get unexpected results from
+        // currentPosition.
+        calculatePositions();
 
         preventTouchDefault(e);
       });
