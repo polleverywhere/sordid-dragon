@@ -12,6 +12,8 @@
     // that on "drag" events.
     var customPageY;
 
+    // The $ghost is a faded copy of the element that moves with the mouse or
+    // finger. It is only shown if the browser doesn't show one natively.
     var $ghost = $("<div></div>");
     $ghost.addClass("sordidDragon-ghost");
     $ghost.css({position: "fixed"});
@@ -63,6 +65,19 @@
       }
     };
 
+    var moveChild = function($besideChild) {
+      var $children = $parent.children(":visible");
+      var newPosition = $children.index($besideChild);
+      var oldPosition = $children.index($childBeingMoved);
+
+      if (newPosition > oldPosition) {
+        $besideChild.after($childBeingMoved);
+      } else if (newPosition < oldPosition) {
+        $besideChild.before($childBeingMoved);
+      }
+    };
+
+
     $parent.children().each(function(_, child) {
       var $child = $(child);
       $child.attr("draggable", "true");
@@ -97,6 +112,9 @@
         });
       }
 
+      $child.on("dragenter.sordidDragon", function(e) {
+        moveChild($child);
+      });
 
       var currentPosition = function(pageY) {
         for (var i = 0, positionsLength = positions.length; i < positionsLength; i++) {
@@ -140,10 +158,16 @@
 
       $child.on("touchmove.sordidDragon drag.sordidDragon", function(e) {
         // Hide the element being moved and replace it with the clone.
-        $child.hide();
+        $child.css({opacity: 0});
         if (!$childBeingMoved.is(":visible") ) {
           $child.after($childBeingMoved);
         }
+        // The hiding must come after the clone is inserted. Otherwise when
+        // you are scrolled down to the bottom of the screen, the act of hiding
+        // $child will cause the screen to scroll up. This makes it feel like
+        // dragging has caused the list to jump around.
+        $child.hide();
+        $child.css({opacity: 1});
 
         var pageY;
         if ( customPageY ) {
@@ -161,9 +185,9 @@
 
         if ( useGhost(e) ) {
           $ghost.css({
-            left: $child.offset().left,
-            top: pageY - ($child.outerHeight() / 2),
-            width: $child.outerWidth(),
+            left: $childBeingMoved.offset().left,
+            top: pageY - ($childBeingMoved.outerHeight() / 2) - window.scrollY,
+            width: $childBeingMoved.outerWidth() - window.scrollX,
             opacity: 1
           });
         }
@@ -172,16 +196,10 @@
           opacity: 0.5
         });
 
-        var newPosition = currentPosition(pageY);
-
-        if (typeof newPosition !== "undefined") {
-          var $children = $parent.children(":visible");
-          var $moveTo = $children.eq(newPosition);
-
-          if (newPosition > $children.index($childBeingMoved)) {
-            $moveTo.after($childBeingMoved.detach());
-          } else if (newPosition < $children.index($childBeingMoved)) {
-            $moveTo.before($childBeingMoved.detach());
+        if ( isTouch(e) ) {
+          var newPosition = currentPosition(pageY);
+          if (typeof newPosition !== "undefined") {
+            moveChild($parent.children(":visible").eq(newPosition));
           }
         }
 
