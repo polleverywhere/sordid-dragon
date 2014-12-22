@@ -1,7 +1,7 @@
 Sordid Dragon
 =============
 
-jQuery plugin for vertical sorting
+jQuery plugin for vertical sorting.
 
 Tested on:
 * Chrome
@@ -16,7 +16,13 @@ Tested on:
 Dependencies
 ============
 
-jQuery
+* jQuery
+
+
+Known issues
+============
+
+* Edge case in Microsoft Surface: If draggable items do not have a CSS width set, the drag ghost image will be taken from the top of the web page. The workaround is to explicitly set the width of the draggable items.
 
 
 Development
