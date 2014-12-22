@@ -15,7 +15,8 @@ Tested on:
 
 Dependencies
 ============
-jQuery `$.browser` (moved to jQuery Migrate in 1.9)
+
+jQuery
 
 
 Development
@@ -33,6 +34,9 @@ TODO
 ====
 
 Remove flickering on desktops when elements are of different heights.
+
+In Firefox there are some bugs if something other than a child element is
+dragged onto one of the child elements.
 
 Add way to removing (turn off) for a given DOM element.
 

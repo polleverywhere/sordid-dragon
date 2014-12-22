@@ -2,7 +2,7 @@
 // Copyright 2014 Poll Everywhere
 // Paul Cortens & Mike Foley
 // https://github.com/polleverywhere/sordid-dragon
-// Version 0.0.5
+// Version 0.0.6
 
 (function ($) {
   $.fn.sordidDragon = function (options) {
@@ -80,7 +80,12 @@
       $ghost.remove();
     };
 
+
+    // Touch devices don't support dragenter or dragover events. Instead we
+    // keep track of the location of each child so we can know which child is
+    // currently under the user's finger.
     var positions;
+
     var calculatePositions = function() {
       positions = [];
 
@@ -102,6 +107,7 @@
         }
       }
     };
+
 
     var moveChild = function($besideChild) {
       var $children = $parent.children(":visible");
@@ -125,14 +131,14 @@
       $child.attr("draggable", "true");
 
       // Setting draggable=true doesn't work in IE8 and IE9. We must call dragDrop().
-      if ( $.browser.msie && (parseInt($.browser.version, 10) == 8 || parseInt($.browser.version, 10) == 9 )) {
-        $child.on("selectstart", function() {
-          if (this.dragDrop) {
-            this.dragDrop();
-          }
-          return false;
-        });
-      }
+      // The selectstart event only fires on IE8/IE9.
+      $child.on("selectstart", function() {
+        console.log("selectstart");
+        if (this.dragDrop) {
+          this.dragDrop();
+        }
+        return false;
+      });
 
 
       $child.on("touchstart.sordidDragon dragstart.sordidDragon", function(e) {
