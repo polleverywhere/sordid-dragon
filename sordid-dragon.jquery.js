@@ -7,6 +7,7 @@
 (function ($) {
   $.fn.sordidDragon = function (options) {
     var $parent = this;
+    var $placeholder;
 
     // The $ghost is a faded copy of the element that moves with the mouse or
     // finger.
@@ -34,9 +35,6 @@
     hideGhost();
     $parent.append($ghost);
 
-
-    var $childBeingMoved;
-
     var positions;
     var calculatePositions = function() {
       positions = [];
@@ -60,26 +58,20 @@
       }
     };
 
-    var isTouch = function(e) {
-      return (/touch/).test(e.type);
-    };
-
-    var preventTouchDefault = function(e) {
-      if ( isTouch(e) ) {
-        e.preventDefault();
-      }
-    };
-
     var moveChild = function($besideChild) {
       var $children = $parent.children(":visible");
       var newPosition = $children.index($besideChild);
-      var oldPosition = $children.index($childBeingMoved);
+      var oldPosition = $children.index($placeholder);
 
       if (newPosition > oldPosition) {
-        $besideChild.after($childBeingMoved);
+        $besideChild.after($placeholder);
       } else if (newPosition < oldPosition) {
-        $besideChild.before($childBeingMoved);
+        $besideChild.before($placeholder);
       }
+    };
+
+    var isTouch = function(e) {
+      return (/touch/).test(e.type);
     };
 
 
@@ -98,27 +90,22 @@
       }
 
 
-      $child.on("dragenter.sordidDragon", function(e) {
-        moveChild($child);
-      });
-
-
       $child.on("touchstart.sordidDragon dragstart.sordidDragon", function(e) {
-        // We must pre-cache the positions after they have been rendered, but
-        // before anything has changed. Otherwise the extra elements we create
-        // during the drag process will interfere.
         if ( isTouch(e) ) {
+          // We must pre-cache the positions after they have been rendered, but
+          // before anything has changed. Otherwise the extra elements we create
+          // during the drag process will interfere.
           calculatePositions();
+
+          $ghost.html($child.clone());
+
+          e.preventDefault();
         }
 
         // Firefox won't trigger "drag" events without this.
         var dt = e.originalEvent.dataTransfer;
         if ( dt ) {
           dt.setData("text", "");
-        }
-
-        if ( isTouch(e) ) {
-          $ghost.html($child.clone());
         }
 
         // Windows touch devices (such as the Microsoft Surface Pro 3) will end
@@ -129,19 +116,17 @@
         //   2) hide the element being moved
         //   3) move the clone around in the DOM
         // Then we clean it all up in the dragend event.
-        $childBeingMoved = $child.clone();
-
-        preventTouchDefault(e);
+        $placeholder = $child.clone();
       });
 
 
       $child.on("touchmove.sordidDragon drag.sordidDragon", function(e) {
         // Hide the element being moved and replace it with the clone.
         $child.css({opacity: 0});
-        if (!$childBeingMoved.is(":visible") ) {
-          $child.after($childBeingMoved);
+        if (!$placeholder.is(":visible") ) {
+          $child.after($placeholder);
 
-          $childBeingMoved.css({
+          $placeholder.css({
             opacity: 0.5
           });
         }
@@ -156,9 +141,9 @@
           var pageY = e.originalEvent.targetTouches[0].pageY;
 
           $ghost.css({
-            left: $childBeingMoved.offset().left,
-            top: (pageY - ($childBeingMoved.outerHeight() / 2)) - window.scrollY,
-            width: $childBeingMoved.outerWidth() - window.scrollX,
+            left: $placeholder.offset().left,
+            top: (pageY - ($placeholder.outerHeight() / 2)) - window.scrollY,
+            width: $placeholder.outerWidth() - window.scrollX,
             opacity: 1
           });
 
@@ -168,29 +153,32 @@
           if (typeof newPosition !== "undefined") {
             moveChild($parent.children(":visible").eq(newPosition));
           }
-        }
 
-        preventTouchDefault(e);
+          e.preventDefault();
+        }
+      });
+
+
+      $child.on("dragenter.sordidDragon", function(e) {
+        moveChild($child);
       });
 
 
       $child.on("touchend.sordidDragon dragend.sordidDragon", function(e) {
-        $childBeingMoved.after($child);
-        $childBeingMoved.remove();
+        $placeholder.after($child);
+        $placeholder.remove();
         $child.show();
 
         if ( isTouch(e) ) {
           hideGhost();
-        }
 
-        // We must recalculate the positions because in the case where items
-        // are not all the same height, we would get unexpected results from
-        // currentPosition.
-        if ( isTouch(e) ) {
+          // We must recalculate the positions because in the case where items
+          // are not all the same height, we would get unexpected results from
+          // currentPosition.
           calculatePositions();
-        }
 
-        preventTouchDefault(e);
+          e.preventDefault();
+        }
       });
     });
   };
