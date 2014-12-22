@@ -8,12 +8,18 @@
   $.fn.sordidDragon = function (options) {
     var $parent = this;
 
-    // Used to store the current mouse position for browsers that don't expose
-    // that on "drag" events.
-    var customPageY;
-
     // The $ghost is a faded copy of the element that moves with the mouse or
-    // finger. It is only shown if the browser doesn't show one natively.
+    // finger.
+    // In most (but not all) browsers that support drag events, the browser will
+    // create a ghost under the cursor for us. That doesn't happen with touch
+    // events, so we create one ourselves.
+    // In IE9 the browser won't create a ghost for us. However, if we show the
+    // ghost in IE9, then the dragenter events won't fire (because the browser
+    // always thinks you are dragging over the ghost, not the items in the
+    // list.)
+    // IE8 also doesn't create a ghost for us. However, showing the ghost in
+    // IE8 makes the UI choppy.
+    // Therefore, we only show this ghost for touch devices.
     var $ghost = $("<div></div>");
     $ghost.addClass("sordidDragon-ghost");
     $ghost.css({position: "fixed"});
@@ -46,15 +52,16 @@
       return positions;
     };
 
-    var isTouch = function(e) {
-      return (/touch/).test(e.type);
+    var currentPosition = function(pageY) {
+      for (var i = 0, positionsLength = positions.length; i < positionsLength; i++) {
+        if ( pageY >= positions[i][0] && pageY < positions[i][1] ) {
+          return i;
+        }
+      }
     };
 
-    // In most (but not all) browsers that support drag events, the browser will
-    // create a ghost under the cursor for us. That doesn't happen with touch
-    // events, so we create one ourselves.
-    var useGhost = function(e) {
-      return isTouch(e) || ($.browser.ie && parseInt($.browser.version, 10) == 8) || ($.browser.ie && parseInt($.browser.version, 10) == 9);
+    var isTouch = function(e) {
+      return (/touch/).test(e.type);
     };
 
     var preventTouchDefault = function(e) {
@@ -76,13 +83,13 @@
     };
 
 
-    $parent.children().each(function(_, child) {
+    $parent.children().not(".sordidDragon-ghost").each(function(_, child) {
       var $child = $(child);
       $child.attr("draggable", "true");
 
       // Setting draggable=true doesn't work in IE8 and IE9. We must call dragDrop().
-      if ( $.browser.ie && (parseInt($.browser.version, 10) == 8 || parseInt($.browser.version, 10) == 9 )) {
-        $child.on("selectstart.sordidDragon", function() {
+      if ( $.browser.msie && (parseInt($.browser.version, 10) == 8 || parseInt($.browser.version, 10) == 9 )) {
+        $child.on("selectstart", function() {
           if (this.dragDrop) {
             this.dragDrop();
           }
@@ -91,44 +98,18 @@
       }
 
 
-      // IE8 and IE10 won't ever tell us the _current_ position of the mouse,
-      // not even during drag, dragenter, or dragover events. Instead we look
-      // at the position of the child element that the event is triggered on
-      // because it is (by definition) under the mouse cursor.
-      if ( $.browser.ie && (parseInt($.browser.version, 10) == 8 || parseInt($.browser.version, 10) == 10 )) {
-        $child.on("dragenter.sordidDragon", function(e) {
-          customPageY = $child.offset().top + ($child.outerHeight() / 2);
-        });
-      }
-
-      // Firefox and IE 11 won't tell us the position of the mouse during drag
-      // events. But they will for dragover (and dragenter) events, so we store
-      // that so we can use it in the drag events.
-      if ( $.browser.mozilla || ($.browser.ie && parseInt($.browser.version, 10) == 11)) {
-        $child.on("dragover.sordidDragon", function(e) {
-          customPageY = e.originalEvent.pageY;
-        });
-      }
-
       $child.on("dragenter.sordidDragon", function(e) {
         moveChild($child);
       });
-
-      var currentPosition = function(pageY) {
-        for (var i = 0, positionsLength = positions.length; i < positionsLength; i++) {
-          if ( pageY >= positions[i][0] && pageY < positions[i][1] ) {
-            return i;
-          }
-        }
-      };
 
 
       $child.on("touchstart.sordidDragon dragstart.sordidDragon", function(e) {
         // We must pre-cache the positions after they have been rendered, but
         // before anything has changed. Otherwise the extra elements we create
         // during the drag process will interfere.
-        calculatePositions();
-
+        if ( isTouch(e) ) {
+          calculatePositions();
+        }
 
         // Firefox won't trigger "drag" events without this.
         var dt = e.originalEvent.dataTransfer;
@@ -136,7 +117,7 @@
           dt.setData("text", "");
         }
 
-        if ( useGhost(e) ) {
+        if ( isTouch(e) ) {
           $ghost.html($child.clone());
         }
 
@@ -159,6 +140,10 @@
         $child.css({opacity: 0});
         if (!$childBeingMoved.is(":visible") ) {
           $child.after($childBeingMoved);
+
+          $childBeingMoved.css({
+            opacity: 0.5
+          });
         }
         // The hiding must come after the clone is inserted. Otherwise when
         // you are scrolled down to the bottom of the screen, the act of hiding
@@ -167,34 +152,18 @@
         $child.hide();
         $child.css({opacity: 1});
 
-        var pageY;
-        if ( customPageY ) {
-          // This must be before the general Desktop option (e.originalEvent.pageY)
-          // because in IE10/11 that value is set, but it will be the starting
-          // position of the mouse, which is not what we want here.
-          pageY = customPageY;
-        } else if ( e.originalEvent.targetTouches ) {
-          // Touch devices
-          pageY = e.originalEvent.targetTouches[0].pageY;
-        } else {
-          // Desktop devices
-          pageY = e.originalEvent.pageY;
-        }
+        if ( isTouch(e) ) {
+          var pageY = e.originalEvent.targetTouches[0].pageY;
 
-        if ( useGhost(e) ) {
           $ghost.css({
             left: $childBeingMoved.offset().left,
-            top: pageY - ($childBeingMoved.outerHeight() / 2) - window.scrollY,
+            top: (pageY - ($childBeingMoved.outerHeight() / 2)) - window.scrollY,
             width: $childBeingMoved.outerWidth() - window.scrollX,
             opacity: 1
           });
-        }
 
-        $childBeingMoved.css({
-          opacity: 0.5
-        });
-
-        if ( isTouch(e) ) {
+          // On touch devices, we don't have dragenter events, so we'll update
+          // the position of the element being dragged here instead.
           var newPosition = currentPosition(pageY);
           if (typeof newPosition !== "undefined") {
             moveChild($parent.children(":visible").eq(newPosition));
@@ -210,14 +179,16 @@
         $childBeingMoved.remove();
         $child.show();
 
-        if ( useGhost(e) ) {
+        if ( isTouch(e) ) {
           hideGhost();
         }
 
         // We must recalculate the positions because in the case where items
         // are not all the same height, we would get unexpected results from
         // currentPosition.
-        calculatePositions();
+        if ( isTouch(e) ) {
+          calculatePositions();
+        }
 
         preventTouchDefault(e);
       });
