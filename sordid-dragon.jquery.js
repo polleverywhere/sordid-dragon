@@ -1,8 +1,8 @@
 // jQuery the Sordid Dragon
-// Copyright 2014 Poll Everywhere
+// Copyright Poll Everywhere
 // Paul Cortens & Mike Foley
 // https://github.com/polleverywhere/sordid-dragon
-// Version 0.0.6
+// Version 1.0.0
 
 (function ($) {
   $.fn.sordidDragon = function (options) {
@@ -133,7 +133,6 @@
       // Setting draggable=true doesn't work in IE8 and IE9. We must call dragDrop().
       // The selectstart event only fires on IE8/IE9.
       $child.on("selectstart", function() {
-        console.log("selectstart");
         if (this.dragDrop) {
           this.dragDrop();
         }
