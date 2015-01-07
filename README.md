@@ -16,7 +16,7 @@ Tested on:
 Dependencies
 ============
 
-* jQuery
+* jQuery >= 1.7
 
 
 Known issues
