@@ -1,0 +1,36 @@
+{
+  "name": "sordid-dragon",
+  "version": "1.0.0",
+  "homepage": "https://github.com/polleverywhere/sordid-dragon",
+  "authors": [
+    "Paul Cortens <paul@polleverywhere.com>",
+    "Mike Foley <mike@polleverywhere.com>"
+  ],
+  "description": "jQuery plugin for vertical sorting.",
+  "main": "sordid-dragon.jquery.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "drag",
+    "drop",
+    "sort",
+    "sortable",
+    "jquery",
+    "sordid",
+    "dragon",
+    "reorder",
+    "touch"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": ">= 1.7.0"
+  }
+}
