@@ -41,10 +41,7 @@ Contributing
 
 Compile to JavaScript prior to committing CoffeeScript changes:
 
-```sh
-npm install -g coffeebar
-./build.sh
-```
+    ./build.sh
 
 
 TODO

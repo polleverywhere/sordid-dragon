@@ -8,6 +8,8 @@ JS_FILE="sordid-dragon.jquery.js"
 MIN_JS_FILE="sordid-dragon.jquery.min.js"
 COMMENT_LINES=6
 
+npm install
+
 coffeebar --bare --output $JS_FILE.tmp $COFFEE_FILE
 coffeebar --bare --minify --output $MIN_JS_FILE.tmp $COFFEE_FILE
 
