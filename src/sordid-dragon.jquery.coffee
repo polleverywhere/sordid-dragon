@@ -2,10 +2,10 @@
 # Copyright Poll Everywhere
 # Paul Cortens & Mike Foley
 # https://github.com/polleverywhere/sordid-dragon
-# Version 1.1.0
+# Version 1.1.1
 
 do ($=jQuery) ->
-  $.fn.sordidDragon = (options) ->
+  $.fn.sordidDragon = (options={}) ->
     $parent = this
 
     # Windows touch devices (such as the Microsoft Surface Pro 3) will end
