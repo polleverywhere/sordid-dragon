@@ -3,9 +3,9 @@
 set -e
 set -u
 
-COFFEE_FILE="sordid-dragon.jquery.coffee"
-JS_FILE="sordid-dragon.jquery.js"
-MIN_JS_FILE="sordid-dragon.jquery.min.js"
+COFFEE_FILE="src/sordid-dragon.jquery.coffee"
+JS_FILE="dist/sordid-dragon.jquery.js"
+MIN_JS_FILE="dist/sordid-dragon.jquery.min.js"
 COMMENT_LINES=6
 
 npm install

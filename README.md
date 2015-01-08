@@ -33,7 +33,7 @@ webserver (which makes it easier to test with virtual machines):
 
     rackup -b 'require "rack"; run Rack::File.new(".")'
 
-Then open your browser to [http://localhost:9292/example.html](http://localhost:9292/example.html)
+Then open your browser to [http://localhost:9292/examples/example.html](http://localhost:9292/examples/example.html)
 
 
 Contributing
