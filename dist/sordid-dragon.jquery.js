@@ -94,15 +94,14 @@
         return false;
       });
       $handle.on("touchstart.sordidDragon dragstart.sordidDragon", function(e) {
-        var dt;
+        var _ref;
         if (isTouch(e)) {
           calculatePositions();
           $ghost = $child.clone();
           e.preventDefault();
         }
-        dt = e.originalEvent.dataTransfer;
-        if (dt != null) {
-          dt.setData("text", "");
+        if ((_ref = e.originalEvent.dataTransfer) != null) {
+          _ref.setData("text", "");
         }
         return $placeholder = $child.clone();
       });

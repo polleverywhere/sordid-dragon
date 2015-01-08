@@ -117,8 +117,7 @@ do ($=jQuery) ->
           $ghost = $child.clone()
           e.preventDefault()
         # Firefox won't trigger "drag" events without this.
-        dt = e.originalEvent.dataTransfer
-        dt?.setData "text", ""
+        e.originalEvent.dataTransfer?.setData "text", ""
         $placeholder = $child.clone()
 
       $handle.on "touchmove.sordidDragon drag.sordidDragon", (e) ->
