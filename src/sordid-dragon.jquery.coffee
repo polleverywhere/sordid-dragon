@@ -99,15 +99,16 @@ do ($=jQuery) ->
 
     $parent.children().each (_, child) ->
       $child = $(child)
-      $child.attr "draggable", "true"
+      $handle = $child.find(options.handle) || $child
+      $handle.attr "draggable", "true"
 
       # Setting draggable=true doesn't work in IE8 and IE9. We must call
       # dragDrop(). The selectstart event only fires on IE8/IE9.
-      $child.on "selectstart", ->
+      $handle.on "selectstart", ->
         @dragDrop?()
         false
 
-      $child.on "touchstart.sordidDragon dragstart.sordidDragon", (e) ->
+      $handle.on "touchstart.sordidDragon dragstart.sordidDragon", (e) ->
         if isTouch(e)
           # We must pre-cache the positions after they have been rendered, but
           # before anything has changed. Otherwise the extra elements we create
@@ -120,7 +121,7 @@ do ($=jQuery) ->
         dt?.setData "text", ""
         $placeholder = $child.clone()
 
-      $child.on "touchmove.sordidDragon drag.sordidDragon", (e) ->
+      $handle.on "touchmove.sordidDragon drag.sordidDragon", (e) ->
         showPlaceholder $child
         if isTouch(e)
           pageY = e.originalEvent.targetTouches[0].pageY
@@ -136,7 +137,7 @@ do ($=jQuery) ->
       $child.on "dragenter.sordidDragon", (e) ->
         moveChild $child
 
-      $child.on "touchend.sordidDragon dragend.sordidDragon", (e) ->
+      $handle.on "touchend.sordidDragon dragend.sordidDragon", (e) ->
         hidePlaceholder $child
         if isTouch(e)
           hideGhost()

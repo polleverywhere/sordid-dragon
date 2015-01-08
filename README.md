@@ -12,6 +12,17 @@ Tested on:
 * iOS
 * Microsoft Surface
 
+Usage
+=====
+
+Call `sordidDragon()` on a jQuery selector to make its immediate children sortable:
+
+    $(".list").sordidDragon();
+
+To use handles for dragging rather than the whole element, include the `handle` option:
+
+    $(".list").sordidDragon({ handle: ".handle" });
+
 
 Dependencies
 ============
@@ -33,7 +44,10 @@ webserver (which makes it easier to test with virtual machines):
 
     rackup -b 'require "rack"; run Rack::File.new(".")'
 
-Then open your browser to [http://localhost:9292/examples/example.html](http://localhost:9292/examples/example.html)
+Then open your browser to load the examples:
+
+- [Basic](http://localhost:9292/examples/basic.html)
+- [Handles](http://localhost:9292/examples/handles.html)
 
 
 Contributing

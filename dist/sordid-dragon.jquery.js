@@ -83,16 +83,17 @@
       return /touch/.test(e.type);
     };
     return $parent.children().each(function(_, child) {
-      var $child;
+      var $child, $handle;
       $child = $(child);
-      $child.attr("draggable", "true");
-      $child.on("selectstart", function() {
+      $handle = $child.find(options.handle) || $child;
+      $handle.attr("draggable", "true");
+      $handle.on("selectstart", function() {
         if (typeof this.dragDrop === "function") {
           this.dragDrop();
         }
         return false;
       });
-      $child.on("touchstart.sordidDragon dragstart.sordidDragon", function(e) {
+      $handle.on("touchstart.sordidDragon dragstart.sordidDragon", function(e) {
         var dt;
         if (isTouch(e)) {
           calculatePositions();
@@ -105,7 +106,7 @@
         }
         return $placeholder = $child.clone();
       });
-      $child.on("touchmove.sordidDragon drag.sordidDragon", function(e) {
+      $handle.on("touchmove.sordidDragon drag.sordidDragon", function(e) {
         var newPosition, pageY;
         showPlaceholder($child);
         if (isTouch(e)) {
@@ -121,7 +122,7 @@
       $child.on("dragenter.sordidDragon", function(e) {
         return moveChild($child);
       });
-      return $child.on("touchend.sordidDragon dragend.sordidDragon", function(e) {
+      return $handle.on("touchend.sordidDragon dragend.sordidDragon", function(e) {
         hidePlaceholder($child);
         if (isTouch(e)) {
           hideGhost();
