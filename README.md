@@ -36,6 +36,17 @@ webserver (which makes it easier to test with virtual machines):
 Then open your browser to [http://localhost:9292/example.html](http://localhost:9292/example.html)
 
 
+Contributing
+============
+
+Compile to JavaScript prior to committing CoffeeScript changes:
+
+```sh
+npm install -g coffeebar
+./build.sh
+```
+
+
 TODO
 ====
 
