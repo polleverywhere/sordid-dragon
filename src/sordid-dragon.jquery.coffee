@@ -2,7 +2,7 @@
 # Copyright Poll Everywhere
 # Paul Cortens & Mike Foley
 # https://github.com/polleverywhere/sordid-dragon
-# Version 1.1.1
+# Version 1.1.2
 
 do ($=jQuery) ->
   $.fn.sordidDragon = (options={}) ->
@@ -99,7 +99,10 @@ do ($=jQuery) ->
 
     $parent.children().each (_, child) ->
       $child = $(child)
-      $handle = $child.find(options.handle) || $child
+      $handle = if options.handle
+        $child.find(options.handle)
+      else
+        $child
       $handle.attr "draggable", "true"
 
       # Setting draggable=true doesn't work in IE8 and IE9. We must call
