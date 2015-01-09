@@ -2,7 +2,7 @@
 # Copyright Poll Everywhere
 # Paul Cortens & Mike Foley
 # https://github.com/polleverywhere/sordid-dragon
-# Version 1.1.3
+# Version 1.1.4
 
 do ($=jQuery) ->
   $.fn.sordidDragon = (options={}) ->
@@ -16,9 +16,9 @@ do ($=jQuery) ->
     #   2) hide the element being moved
     #   3) move the clone around in the DOM
     # Then we clean it all up in the dragend event.
+
     $placeholder = undefined
     showPlaceholder = ($child) ->
-
       # Hide the element being moved and replace it with the clone.
       $child.css opacity: 0
       unless $placeholder.is(":visible")
@@ -34,9 +34,10 @@ do ($=jQuery) ->
       $child.css opacity: 1
 
     hidePlaceholder = ($child) ->
-      $placeholder.after $child
-      $placeholder.remove()
-      $child.show()
+      if $placeholder.is(":visible")
+        $placeholder.after $child
+        $placeholder.remove()
+        $child.show()
 
     # The $ghost is a faded copy of the element that moves with the mouse or
     # finger.
