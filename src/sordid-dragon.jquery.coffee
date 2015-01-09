@@ -2,7 +2,7 @@
 # Copyright Poll Everywhere
 # Paul Cortens & Mike Foley
 # https://github.com/polleverywhere/sordid-dragon
-# Version 1.1.2
+# Version 1.1.3
 
 do ($=jQuery) ->
   $.fn.sordidDragon = (options={}) ->
@@ -82,7 +82,7 @@ do ($=jQuery) ->
       positions
 
     currentPosition = (pageY) ->
-      for i in [0..positions.length]
+      for i in [0...positions.length]
         return i if pageY >= positions[i][0] && pageY < positions[i][1]
 
     moveChild = ($besideChild) ->
