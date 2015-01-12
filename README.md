@@ -33,6 +33,7 @@ Dependencies
 Known issues
 ============
 
+* The "ghost" doesn't appear while dragging in IE8/IE9.
 * Edge case in Microsoft Surface: If draggable items do not have a CSS width set, the drag ghost image will be taken from the top of the web page. The workaround is to explicitly set the width of the draggable items.
 
 

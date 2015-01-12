@@ -2,7 +2,7 @@
 # Copyright Poll Everywhere
 # Paul Cortens & Mike Foley
 # https://github.com/polleverywhere/sordid-dragon
-# Version 1.1.4
+# Version 1.1.5
 
 do ($=jQuery) ->
   $.fn.sordidDragon = (options={}) ->
@@ -51,14 +51,13 @@ do ($=jQuery) ->
     # IE8 also doesn't create a ghost for us. However, showing the ghost in
     # IE8 makes the UI choppy.
     # Therefore, we only show this ghost for touch devices.
-    $ghost = undefined
+    $ghost = null
     showGhost = (pageY) ->
       unless $ghost.is(":visible")
         $ghost.addClass "sordidDragon-ghost"
         $ghost.css
           position: "fixed"
           opacity: 1
-
         $parent.append $ghost
       $ghost.css
         left: $placeholder.offset().left
@@ -71,7 +70,7 @@ do ($=jQuery) ->
     # Touch devices don't support dragenter or dragover events. Instead we
     # keep track of the location of each child so we can know which child is
     # currently under the user's finger.
-    positions = undefined
+    positions = null
     calculatePositions = ->
       positions = []
       $parent.children().each (_, child) ->
@@ -85,6 +84,7 @@ do ($=jQuery) ->
     currentPosition = (pageY) ->
       for i in [0...positions.length]
         return i if pageY >= positions[i][0] && pageY < positions[i][1]
+      null
 
     moveChild = ($besideChild) ->
       $children = $parent.children(":visible")
@@ -106,11 +106,10 @@ do ($=jQuery) ->
         $child
       $handle.attr "draggable", "true"
 
-      # Setting draggable=true doesn't work in IE8 and IE9. We must call
-      # dragDrop(). The selectstart event only fires on IE8/IE9.
-      $handle.on "selectstart", ->
-        @dragDrop?()
-        false
+      # Setting draggable=true doesn't work in IE8/IE9. We must call the IE
+      # native dragDrop(). The selectstart event only fires on IE8/IE9.
+      $handle.on "selectstart.sordidDragon", (e) ->
+        e.target.dragDrop()
 
       $handle.on "touchstart.sordidDragon dragstart.sordidDragon", (e) ->
         if isTouch(e)
@@ -133,7 +132,7 @@ do ($=jQuery) ->
           # On touch devices, we don't have dragenter events, so we'll update
           # the position of the element being dragged here instead.
           newPosition = currentPosition(pageY)
-          if typeof newPosition != "undefined"
+          if newPosition?
             moveChild $parent.children(":visible").eq(newPosition)
           e.preventDefault()
 
