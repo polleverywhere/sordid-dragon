@@ -6,6 +6,7 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script type="text/javascript" src="../dist/sordid-dragon.jquery.js"></script>
     <style>
+      .controls { padding: 1em; background-color: #ccc }
       .list { padding: 1em; }
       .item { padding: 1em; width: 100%; min-height: 3em; }
       .red { background-color: #cc3333; }
@@ -22,6 +23,14 @@
   </head>
   <body>
     <h1>Demo</h1>
+    <div class="controls">
+      <a href="#" class="enable">Enable</a>
+      <a href="#" class="disable">Disable</a>
+    </div>
+    <div>
+      Current Status:
+      <span class="status">Disabled</span>
+    </div>
     <div class="list">
       <div class="item red">
         Top level 1
@@ -92,7 +101,16 @@
 
     <script type="text/javascript">
       //<![CDATA[
-        $(".list").sordidDragon({ handle: ".handle" });
+        $(".enable").click(function(e){
+          $(".status").text("Enabled");
+          $(".list").sordidDragon({ handle: ".handle" });
+          e.preventDefault();
+        });
+        $(".disable").click(function(e){
+          $(".status").text("Disabled");
+          $(".list").sordidDragon("destroy", { handle: ".handle" });
+          e.preventDefault();
+        });
       //]]>
     </script>
   </body>

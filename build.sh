@@ -7,11 +7,12 @@ COFFEE_FILE="src/sordid-dragon.jquery.coffee"
 JS_FILE="dist/sordid-dragon.jquery.js"
 MIN_JS_FILE="dist/sordid-dragon.jquery.min.js"
 COMMENT_LINES=6
+COFFEEBAR="node_modules/.bin/coffeebar"
 
 npm install
 
-coffeebar --bare --output $JS_FILE.tmp $COFFEE_FILE
-coffeebar --bare --minify --output $MIN_JS_FILE.tmp $COFFEE_FILE
+$COFFEEBAR --bare --output $JS_FILE.tmp $COFFEE_FILE
+$COFFEEBAR --bare --minify --output $MIN_JS_FILE.tmp $COFFEE_FILE
 
 function add_header {
   head -$COMMENT_LINES $COFFEE_FILE | sed 's/^#/\/\//' > $1

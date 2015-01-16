@@ -5,7 +5,10 @@
 # Version 1.1.5
 
 do ($=jQuery) ->
-  $.fn.sordidDragon = (options={}) ->
+  $.fn.sordidDragon = (command="enable", options={}) ->
+    unless typeof command is "string"
+      options = command
+
     $parent = this
 
     # Windows touch devices (such as the Microsoft Surface Pro 3) will end
@@ -104,7 +107,17 @@ do ($=jQuery) ->
         $child.find(options.handle)
       else
         $child
-      $handle.attr "draggable", "true"
+      # Careful here. This might be interfering with other code that sets the
+      # "draggable" attribute.
+      $handle.attr "draggable", String(command != "destroy")
+
+      # Clear out the existing events (so they aren't duplicated).
+      $handle.off "selectstart.sordidDragon touchstart.sordidDragon dragstart.sordidDragon touchmove.sordidDragon drag.sordidDragon touchend.sordidDragon dragend.sordidDragon"
+      $child.off "dragenter.sordidDragon"
+
+      # If we are destroying, then just move on to the next child rather
+      # than setting up any event listeners.
+      return if command is "destroy"
 
       # Setting draggable=true doesn't work in IE8/IE9. We must call the IE
       # native dragDrop(). The selectstart event only fires on IE8/IE9.

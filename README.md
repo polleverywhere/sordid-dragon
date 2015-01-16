@@ -23,6 +23,13 @@ To use handles for dragging rather than the whole element, include the `handle` 
 
     $(".list").sordidDragon({ handle: ".handle" });
 
+To remove all event listeners (and disable dragging) specify "destroy" as the argument:
+
+    $(".list").sordidDragon("destroy");
+
+or
+
+    $(".list").sordidDragon("destroy", { handle: ".handle" });
 
 Dependencies
 ============
@@ -66,5 +73,3 @@ Remove flickering on desktops when elements are of different heights.
 
 In Firefox there are some bugs if something other than a child element is
 dragged onto one of the child elements.
-
-Add way to removing (turn off) for a given DOM element.
