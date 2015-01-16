@@ -68,5 +68,3 @@ In Firefox there are some bugs if something other than a child element is
 dragged onto one of the child elements.
 
 Add way to removing (turn off) for a given DOM element.
-
-Add option for specifying a "handle".
