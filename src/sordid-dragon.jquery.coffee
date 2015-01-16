@@ -2,7 +2,7 @@
 # Copyright Poll Everywhere
 # Paul Cortens & Mike Foley
 # https://github.com/polleverywhere/sordid-dragon
-# Version 1.1.5
+# Version 1.2.0
 
 do ($=jQuery) ->
   $.fn.sordidDragon = (command="enable", options={}) ->
