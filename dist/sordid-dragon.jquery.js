@@ -140,8 +140,9 @@
         if (isTouch(e)) {
           hideGhost();
           calculatePositions();
-          return e.preventDefault();
+          e.preventDefault();
         }
+        return typeof options.sortEnd === "function" ? options.sortEnd(e, $child) : void 0;
       });
     });
   };

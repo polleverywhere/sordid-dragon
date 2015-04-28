@@ -35,6 +35,15 @@ To only allow a subset of the child elements to be dragged, include the `childSe
 
     $(".list").sordidDragon({ childSelector: ":not(.undraggable)" });
 
+To register an event handler that fires when a sort/drag is complete, include the `sortEnd` option:
+
+    $(".list").sordidDragon({
+      sortEnd: function(event, child) {
+        // event is the raw JavaScript event
+        // child is a jQuery object referencing the child element that was just moved.
+      }
+    });
+
 Dependencies
 ============
 
@@ -60,7 +69,7 @@ Then open your browser to load the examples:
 
 - [Basic](http://localhost:9292/examples/basic.html)
 - [Handles](http://localhost:9292/examples/handles.html)
-- [childSelector](http://localhost:9292/examples/undraggable.html)
+- [childSelector](http://localhost:9292/examples/complex.html)
 
 
 Contributing

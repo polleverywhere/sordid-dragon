@@ -162,3 +162,4 @@ do ($=jQuery) ->
           # currentPosition.
           calculatePositions()
           e.preventDefault()
+        options.sortEnd?(e, $child)

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Example With Child Elements That Cannot be Dragged</title>
+    <title>Complex Example</title>
     <meta charset="utf-8">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script type="text/javascript" src="../dist/sordid-dragon.jquery.js"></script>
@@ -30,6 +30,10 @@
     <div>
       Current Status:
       <span class="status">Disabled</span>
+    </div>
+    <div>
+      Last Moved:
+      <span class="last-moved">None moved yet</span>
     </div>
     <div class="list">
       <div class="item red undraggable">
@@ -104,16 +108,24 @@
         $(".enable").click(function(e){
           $(".status").text("Enabled");
           $(".list").sordidDragon({
+            handle: ".handle",
             childSelector: ":not(.undraggable)",
-            handle: ".handle"
+            sortEnd: function(event, child) {
+              $(".last-moved").text(child.attr("class").replace("item ", ""));
+            }
           });
           e.preventDefault();
         });
         $(".disable").click(function(e){
           $(".status").text("Disabled");
           $(".list").sordidDragon("destroy", {
-            childSelector: ":not(.undraggable)",
-            handle: ".handle"
+            // It is critical that the handle option matches above.
+            handle: ".handle",
+            // You could probably leave out childSelector when destroying
+            // because it defaults to all children.
+            childSelector: ":not(.undraggable)"
+            // It is not necessary to include the sortEnd option when
+            // destroying.
           });
           e.preventDefault();
         });
