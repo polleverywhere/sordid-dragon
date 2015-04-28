@@ -127,7 +127,7 @@
           showGhost(pageY);
           newPosition = currentPosition(pageY);
           if (newPosition != null) {
-            moveChild($parent.children(":visible").eq(newPosition));
+            moveChild($parent.children("" + (options.childSelector || "") + ":visible").eq(newPosition));
           }
           return e.preventDefault();
         }

@@ -146,7 +146,7 @@ do ($=jQuery) ->
           # the position of the element being dragged here instead.
           newPosition = currentPosition(pageY)
           if newPosition?
-            moveChild $parent.children(":visible").eq(newPosition)
+            moveChild $parent.children("#{options.childSelector || ""}:visible").eq(newPosition)
           e.preventDefault()
 
       $child.on "dragenter.sordidDragon", (e) ->
