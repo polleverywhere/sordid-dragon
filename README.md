@@ -35,6 +35,11 @@ To only allow a subset of the child elements to be dragged, include the `childSe
 
     $(".list").sordidDragon({ childSelector: ":not(.undraggable)" });
 
+NOTE: If a child element excluded by `childSelector` is in the middle of the
+list, you will be able to drag items from above it to below it or vice versa.
+However, if the child element excluded by `childSelector` is at the beginning
+or end of the list, you will not be able to drag items above/below it.
+
 To register an event handler that fires when a sort/drag is complete, include the `sortEnd` option:
 
     $(".list").sordidDragon({
