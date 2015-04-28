@@ -31,6 +31,10 @@ or
 
     $(".list").sordidDragon("destroy", { handle: ".handle" });
 
+To only allow a subset of the child elements to be dragged, include the `childSelector` option:
+
+    $(".list").sordidDragon({ childSelector: ":not(.undraggable)" });
+
 Dependencies
 ============
 
@@ -56,6 +60,7 @@ Then open your browser to load the examples:
 
 - [Basic](http://localhost:9292/examples/basic.html)
 - [Handles](http://localhost:9292/examples/handles.html)
+- [childSelector](http://localhost:9292/examples/undraggable.html)
 
 
 Contributing

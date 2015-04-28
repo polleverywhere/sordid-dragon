@@ -76,7 +76,7 @@ do ($=jQuery) ->
     positions = null
     calculatePositions = ->
       positions = []
-      $parent.children().each (_, child) ->
+      $parent.children(options.childSelector).each (_, child) ->
         $child = $(child)
         positions.push [
           $child.offset().top
@@ -90,7 +90,7 @@ do ($=jQuery) ->
       null
 
     moveChild = ($besideChild) ->
-      $children = $parent.children(":visible")
+      $children = $parent.children("#{options.childSelector || ""}:visible")
       newPosition = $children.index($besideChild)
       oldPosition = $children.index($placeholder)
       if newPosition > oldPosition
@@ -101,7 +101,7 @@ do ($=jQuery) ->
     isTouch = (e) ->
       (/touch/).test e.type
 
-    $parent.children().each (_, child) ->
+    $parent.children(options.childSelector).each (_, child) ->
       $child = $(child)
       $handle = if options.handle
         $child.find(options.handle)

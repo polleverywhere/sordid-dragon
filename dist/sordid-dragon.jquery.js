@@ -64,7 +64,7 @@
     positions = null;
     calculatePositions = function() {
       positions = [];
-      $parent.children().each(function(_, child) {
+      $parent.children(options.childSelector).each(function(_, child) {
         var $child;
         $child = $(child);
         return positions.push([$child.offset().top, $child.offset().top + $child.outerHeight()]);
@@ -82,7 +82,7 @@
     };
     moveChild = function($besideChild) {
       var $children, newPosition, oldPosition;
-      $children = $parent.children(":visible");
+      $children = $parent.children("" + (options.childSelector || "") + ":visible");
       newPosition = $children.index($besideChild);
       oldPosition = $children.index($placeholder);
       if (newPosition > oldPosition) {
@@ -94,7 +94,7 @@
     isTouch = function(e) {
       return /touch/.test(e.type);
     };
-    return $parent.children().each(function(_, child) {
+    return $parent.children(options.childSelector).each(function(_, child) {
       var $child, $handle;
       $child = $(child);
       $handle = options.handle ? $child.find(options.handle) : $child;
