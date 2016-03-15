@@ -1,8 +1,8 @@
 # jQuery the Sordid Dragon
 # Copyright Poll Everywhere
-# Paul Cortens & Mike Foley
+# Paul Cortens, Mike Foley and Adam Heath
 # https://github.com/polleverywhere/sordid-dragon
-# Version 1.3.1
+# Version 2.0.0
 
 do ($=jQuery) ->
   $.fn.sordidDragon = (command="enable", options={}) ->
@@ -10,6 +10,17 @@ do ($=jQuery) ->
       options = command
 
     $parent = this
+    isDragging = false
+
+    # Remove old instance if it exists
+    if $.isFunction $parent.data("removeSordidDragon")
+      $parent.data("removeSordidDragon")()
+
+    # Handle removing an old instance in case 'enable' is called multiple times
+    $parent.data "removeSordidDragon", ->
+      isDragging = false
+      hidePlaceholder()
+      hideGhost()
 
     # Windows touch devices (such as the Microsoft Surface Pro 3) will end
     # the drag event early (and not call dragend) if the element being
@@ -20,8 +31,10 @@ do ($=jQuery) ->
     #   3) move the clone around in the DOM
     # Then we clean it all up in the dragend event.
 
-    $placeholder = undefined
+    $placeholder = null
+    $activePlaceholderChild = null
     showPlaceholder = ($child) ->
+      $activePlaceholderChild = $child
       # Hide the element being moved and replace it with the clone.
       $child.css opacity: 0
       unless $placeholder.is(":visible")
@@ -36,24 +49,17 @@ do ($=jQuery) ->
       $child.hide()
       $child.css opacity: 1
 
-    hidePlaceholder = ($child) ->
-      if $placeholder.is(":visible")
-        $placeholder.after $child
+    hidePlaceholder = ->
+      if $placeholder && $placeholder.is(":visible")
+        $placeholder.after $activePlaceholderChild
         $placeholder.remove()
-        $child.show()
+        $activePlaceholderChild.show()
 
     # The $ghost is a faded copy of the element that moves with the mouse or
     # finger.
     # In most (but not all) browsers that support drag events, the browser will
     # create a ghost under the cursor for us. That doesn't happen with touch
     # events, so we create one ourselves.
-    # In IE9 the browser won't create a ghost for us. However, if we show the
-    # ghost in IE9, then the dragenter events won't fire (because the browser
-    # always thinks you are dragging over the ghost, not the items in the
-    # list.)
-    # IE8 also doesn't create a ghost for us. However, showing the ghost in
-    # IE8 makes the UI choppy.
-    # Therefore, we only show this ghost for touch devices.
     $ghost = null
     showGhost = (pageY) ->
       unless $ghost.is(":visible")
@@ -68,7 +74,8 @@ do ($=jQuery) ->
         width: $placeholder.outerWidth() - window.scrollX
 
     hideGhost = ->
-      $ghost.remove()
+      if $ghost
+        $ghost.remove()
 
     # Touch devices don't support dragenter or dragover events. Instead we
     # keep track of the location of each child so we can know which child is
@@ -112,17 +119,12 @@ do ($=jQuery) ->
       $handle.attr "draggable", String(command != "destroy")
 
       # Clear out the existing events (so they aren't duplicated).
-      $handle.off "selectstart.sordidDragon touchstart.sordidDragon dragstart.sordidDragon touchmove.sordidDragon drag.sordidDragon touchend.sordidDragon dragend.sordidDragon"
+      $handle.off "touchstart.sordidDragon dragstart.sordidDragon touchmove.sordidDragon drag.sordidDragon touchend.sordidDragon dragend.sordidDragon"
       $child.off "dragenter.sordidDragon"
 
       # If we are destroying, then just move on to the next child rather
       # than setting up any event listeners.
       return if command is "destroy"
-
-      # Setting draggable=true doesn't work in IE8/IE9. We must call the IE
-      # native dragDrop(). The selectstart event only fires on IE8/IE9.
-      $handle.on "selectstart.sordidDragon", (e) ->
-        e.target.dragDrop()
 
       $handle.on "touchstart.sordidDragon dragstart.sordidDragon", (e) ->
         if isTouch(e)
@@ -135,31 +137,37 @@ do ($=jQuery) ->
         # Firefox won't trigger "drag" events without this.
         e.originalEvent.dataTransfer?.setData "text", ""
         $placeholder = $child.clone()
+        isDragging = true
 
       $handle.on "touchmove.sordidDragon drag.sordidDragon", (e) ->
-        showPlaceholder $child
-        if isTouch(e)
-          pageY = e.originalEvent.targetTouches[0].pageY
-          showGhost pageY
+        if isDragging
+          showPlaceholder $child
+          if isTouch(e)
+            pageY = e.originalEvent.targetTouches[0].pageY
+            showGhost pageY
 
-          # On touch devices, we don't have dragenter events, so we'll update
-          # the position of the element being dragged here instead.
-          newPosition = currentPosition(pageY)
-          if newPosition?
-            moveChild $parent.children("#{options.childSelector || ""}:visible").eq(newPosition)
-          e.preventDefault()
+            # On touch devices, we don't have dragenter events, so we'll update
+            # the position of the element being dragged here instead.
+            newPosition = currentPosition(pageY)
+            if newPosition?
+              moveChild $parent.children("#{options.childSelector || ""}:visible").eq(newPosition)
+            e.preventDefault()
 
       $child.on "dragenter.sordidDragon", (e) ->
-        moveChild $child
+        if isDragging
+          moveChild $child
 
       $handle.on "touchend.sordidDragon dragend.sordidDragon", (e) ->
-        hidePlaceholder $child
-        if isTouch(e)
-          hideGhost()
+        if isDragging
+          hidePlaceholder $child
+          if isTouch(e)
+            hideGhost()
 
-          # We must recalculate the positions because in the case where items
-          # are not all the same height, we would get unexpected results from
-          # currentPosition.
-          calculatePositions()
-          e.preventDefault()
-        options.sortEnd?(e, $child)
+            # We must recalculate the positions because in the case where items
+            # are not all the same height, we would get unexpected results from
+            # currentPosition.
+            calculatePositions()
+            e.preventDefault()
+          options.sortEnd?(e, $child)
+
+        isDragging = false

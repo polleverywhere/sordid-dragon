@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Example</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script type="text/javascript" src="../dist/sordid-dragon.jquery.js"></script>
+    <style>
+      .controls { padding: 1em; background-color: #ccc }
+      .list { padding: 1em; }
+      .item { padding: 1em; width: 100%; }
+      .red { background-color: #cc3333; }
+      .green { background-color: #339933; }
+      .lightgreen { background-color: lightgreen; }
+      .blue { background-color: #3333cc; }
+      .yellow { background-color: #ffff33; }
+      .orange { background-color: #ffcc00; }
+      .aqua { background-color: #33ccff; }
+      .lightblue { background-color: lightblue; }
+      .purple { background-color: purple; }
+    </style>
+  </head>
+  <body>
+    <h1>Demo</h1>
+    <p>Auto-enabled on page load, then re-enabled 2s later</p>
+    <p>Starting (but not finishing) a drag within that 2s did cause an error</p>
+    <div class="list">
+      <div class="item red">
+        Top level 1
+        <div>Nesting</div>
+        <div>Even More<div>Other Nesting</div></div>
+      </div>
+
+      <div class="item green">
+        Top level 2
+        <div>Nesting</div>
+        <div>
+          <img src="dragon.jpg" alt="dragon" />
+          <br>
+          <a href="http://www.public-domain-image.com/fauna-animals-public-domain-images-pictures/reptiles-and-amphibians-public-domain-images-pictures/lizards-and-geckos-pictures/bearded-dragon-lizard.jpg.html" title="Bearded dragon lizard">Bearded dragon lizard</a> by Gary M. Stolz, U.S. Fish and Wildlife Service
+          <i>Image has been cropped</i>
+        </div>
+        <div>Even More<div>Other Nesting</div></div>
+      </div>
+
+      <div class="item blue">
+        Top level 3
+        <div>Nesting</div>
+        <div>Even More<div>Other Nesting</div></div>
+      </div>
+
+      <div class="item yellow">
+        Top level 4
+      </div>
+
+      <div class="item orange">
+        Top level 5
+        <div>Nesting</div>
+        <div>Even More<div>Other Nesting</div></div>
+      </div>
+
+      <div class="item aqua">
+        Top level 6
+        <div>Nesting</div>
+      </div>
+
+      <div class="item purple">
+        Top level 7
+        <div>Nesting</div>
+        <div>Even More<div>Other Nesting</div></div>
+      </div>
+
+      <div class="item lightgreen">
+        Top level 8
+        <div>Nesting</div>
+        <div>Even More<div>Other Nesting</div></div>
+      </div>
+
+      <div class="item lightblue">
+        Top level 9
+        <div>Nesting</div>
+        <div>Even More<div>Other Nesting</div></div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      //<![CDATA[
+        $(".list").sordidDragon();
+        setTimeout(function() {
+          $(".list").sordidDragon();
+        }, 2000)
+      //]]>
+    </script>
+  </body>
+</html>
