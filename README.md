@@ -6,7 +6,8 @@ jQuery plugin for vertical sorting.
 Tested on:
 * Chrome
 * Firefox
-* IE8-11
+* IE10-11
+* Edge
 * Safari
 * Android
 * iOS
@@ -65,16 +66,14 @@ Known issues
 Development
 ===========
 
-If you have the [rackup](https://rack.github.io/) tool, you can start a simple
-webserver (which makes it easier to test with virtual machines):
+Run a local webserver from this directory and load the examples from the `examples/` directory.
 
-    rackup -b 'require "rack"; run Rack::File.new(".")'
+E.g. with [http-server](https://www.npmjs.com/package/http-server) run `http-server` and test with the below URLs
 
-Then open your browser to load the examples:
-
-- [Basic](http://localhost:9292/examples/basic.html)
-- [Handles](http://localhost:9292/examples/handles.html)
-- [childSelector](http://localhost:9292/examples/complex.html)
+- [Basic](http://localhost:8080/examples/basic.html)
+- [Handles](http://localhost:8080/examples/handles.html)
+- [childSelector](http://localhost:8080/examples/complex.html)
+- [Re-enabled Basic](http://localhost:8080/examples/re_enable_basic.html)
 
 
 Contributing

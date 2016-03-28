@@ -50,7 +50,7 @@ do ($=jQuery) ->
       $child.css opacity: 1
 
     hidePlaceholder = ->
-      if $placeholder && $placeholder.is(":visible")
+      if $placeholder?.is(":visible")
         $placeholder.after $activePlaceholderChild
         $placeholder.remove()
         $activePlaceholderChild.show()
@@ -74,8 +74,7 @@ do ($=jQuery) ->
         width: $placeholder.outerWidth() - window.scrollX
 
     hideGhost = ->
-      if $ghost
-        $ghost.remove()
+      $ghost?.remove()
 
     # Touch devices don't support dragenter or dragover events. Instead we
     # keep track of the location of each child so we can know which child is
@@ -140,34 +139,37 @@ do ($=jQuery) ->
         isDragging = true
 
       $handle.on "touchmove.sordidDragon drag.sordidDragon", (e) ->
-        if isDragging
-          showPlaceholder $child
-          if isTouch(e)
-            pageY = e.originalEvent.targetTouches[0].pageY
-            showGhost pageY
+        return unless isDragging
 
-            # On touch devices, we don't have dragenter events, so we'll update
-            # the position of the element being dragged here instead.
-            newPosition = currentPosition(pageY)
-            if newPosition?
-              moveChild $parent.children("#{options.childSelector || ""}:visible").eq(newPosition)
-            e.preventDefault()
+        showPlaceholder $child
+        if isTouch(e)
+          pageY = e.originalEvent.targetTouches[0].pageY
+          showGhost pageY
+
+          # On touch devices, we don't have dragenter events, so we'll update
+          # the position of the element being dragged here instead.
+          newPosition = currentPosition(pageY)
+          if newPosition?
+            moveChild $parent.children("#{options.childSelector || ""}:visible").eq(newPosition)
+          e.preventDefault()
 
       $child.on "dragenter.sordidDragon", (e) ->
-        if isDragging
-          moveChild $child
+        return unless isDragging
+
+        moveChild $child
 
       $handle.on "touchend.sordidDragon dragend.sordidDragon", (e) ->
-        if isDragging
-          hidePlaceholder $child
-          if isTouch(e)
-            hideGhost()
+        return unless isDragging
 
-            # We must recalculate the positions because in the case where items
-            # are not all the same height, we would get unexpected results from
-            # currentPosition.
-            calculatePositions()
-            e.preventDefault()
-          options.sortEnd?(e, $child)
+        hidePlaceholder $child
+        if isTouch(e)
+          hideGhost()
+
+          # We must recalculate the positions because in the case where items
+          # are not all the same height, we would get unexpected results from
+          # currentPosition.
+          calculatePositions()
+          e.preventDefault()
+        options.sortEnd?(e, $child)
 
         isDragging = false
