@@ -83,6 +83,15 @@ Compile to JavaScript prior to committing CoffeeScript changes:
 
     ./build.sh
 
+Release
+=======
+
+To release to bower:
+
+ - Bump the version
+  - Comment at the top of `src/sordid-dragon.jquery.coffee`
+  - Version field in `bower.json`
+ - Commit and tag as vX.Y.Z
 
 TODO
 ====

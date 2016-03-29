@@ -1,4 +1,7 @@
 
+## 2.0.1
+
+- Patch release to fix bower version mismatch warning
 
 ## 2.0
 
