@@ -12,6 +12,7 @@ Tested on:
 * Android
 * iOS
 * Microsoft Surface
+ * Needs long press to initiate drag, until pointer events are implemented here
 
 Usage
 =====
@@ -96,7 +97,9 @@ To release to bower:
 TODO
 ====
 
-Remove flickering on desktops when elements are of different heights.
+- Remove flickering on desktops when elements are of different heights.
 
-In Firefox there are some bugs if something other than a child element is
+- In Firefox there are some bugs if something other than a child element is
 dragged onto one of the child elements.
+
+- Add support for pointer events
