@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=0">
+  <title>PE jQuery Plugin sordid-dragon</title>
+  <style>
+    .block {
+      width: 320px;
+    }
+    .transformed {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .sort-list__item {
+      display: block;
+      width: 100%;
+      margin: 0.5em auto;
+      padding: 1em;
+      border: none;
+      background-color: #eee;
+    }
+    .sort-list__item:active,
+    .sort-list__item:focus {
+      outline: none;
+    }
+  </style>
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="../dist/sordid-dragon.jquery.js"></script>
+  <script>
+    (function($, document, window, undefined) {
+      'use strict';
+      $(function() {
+        $('.sort-list').sordidDragon();
+      });
+    })(jQuery, document, window);
+  </script>
+</head>
+<body>
+  <div class="block static">
+    <div class="sort-list">
+      <button draggable="true" class="sort-list__item" data-id="1">Sort Item 1</button>
+      <button class="sort-list__item" data-id="2">Sort Item 2</button>
+      <button class="sort-list__item" data-id="3">Sort Item 3</button>
+      <button class="sort-list__item" data-id="4">Sort Item 4</button>
+      <button class="sort-list__item" data-id="5">Sort Item 5</button>
+      <button class="sort-list__item" data-id="6">Sort Item 6</button>
+      <button class="sort-list__item" data-id="7">Sort Item 7</button>
+      <button class="sort-list__item" data-id="8">Sort Item 8</button>
+      <button class="sort-list__item" data-id="9">Sort Item 9</button>
+      <button draggable="true" class="sort-list__item" data-id="10">Sort Item 10</button>
+    </div>
+  </div>
+
+  <div class="block transformed">
+    <div class="sort-list">
+      <button draggable="true" class="sort-list__item" data-id="1">Sort Item 1</button>
+      <button class="sort-list__item" data-id="2">Sort Item 2</button>
+      <button class="sort-list__item" data-id="3">Sort Item 3</button>
+      <button class="sort-list__item" data-id="4">Sort Item 4</button>
+      <button class="sort-list__item" data-id="5">Sort Item 5</button>
+      <button class="sort-list__item" data-id="6">Sort Item 6</button>
+      <button class="sort-list__item" data-id="7">Sort Item 7</button>
+      <button class="sort-list__item" data-id="8">Sort Item 8</button>
+      <button class="sort-list__item" data-id="9">Sort Item 9</button>
+      <button class="sort-list__item" data-id="10">Sort Item 10</button>
+      <button class="sort-list__item" data-id="11">Sort Item 11</button>
+      <button class="sort-list__item" data-id="12">Sort Item 12</button>
+      <button class="sort-list__item" data-id="13">Sort Item 13</button>
+      <button class="sort-list__item" data-id="14">Sort Item 14</button>
+      <button class="sort-list__item" data-id="15">Sort Item 15</button>
+      <button class="sort-list__item" data-id="16">Sort Item 16</button>
+      <button class="sort-list__item" data-id="17">Sort Item 17</button>
+      <button class="sort-list__item" data-id="18">Sort Item 18</button>
+      <button class="sort-list__item" data-id="19">Sort Item 19</button>
+      <button draggable="true" class="sort-list__item" data-id="20">Sort Item 20</button>
+    </div>
+  </div>
+</body>
+</html>
