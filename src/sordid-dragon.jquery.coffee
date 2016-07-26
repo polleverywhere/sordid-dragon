@@ -2,14 +2,19 @@
 # Copyright Poll Everywhere
 # Paul Cortens, Mike Foley and Adam Heath
 # https://github.com/polleverywhere/sordid-dragon
-# Version 2.0.1
+# Version 2.1.0
 
 do ($=jQuery) ->
+
+  isTouchDevice = ->
+    'ontouchstart' of document.documentElement
+
   $.fn.sordidDragon = (command="enable", options={}) ->
     unless typeof command is "string"
       options = command
 
     $parent = this
+    $ghostContainer = $(options.ghostContainer) || $parent
     isDragging = false
 
     # Remove old instance if it exists
@@ -63,11 +68,13 @@ do ($=jQuery) ->
     $ghost = null
     showGhost = (pageY) ->
       unless $ghost.is(":visible")
-        $ghost.addClass "sordidDragon-ghost"
-        $ghost.css
-          position: "fixed"
-          opacity: 1
-        $parent.append $ghost
+        $ghost
+          .addClass "sordidDragon-ghost"
+          .css
+            position: "fixed"
+            opacity: 1
+        $ghostContainer.append $ghost
+
       $ghost.css
         left: $placeholder.offset().left
         top: (pageY - ($placeholder.outerHeight() / 2)) - window.scrollY
@@ -104,9 +111,6 @@ do ($=jQuery) ->
       else if newPosition < oldPosition
         $besideChild.before $placeholder
 
-    isTouch = (e) ->
-      (/touch/).test e.type
-
     $parent.children(options.childSelector).each (_, child) ->
       $child = $(child)
       $handle = if options.handle
@@ -126,7 +130,7 @@ do ($=jQuery) ->
       return if command is "destroy"
 
       $handle.on "touchstart.sordidDragon dragstart.sordidDragon", (e) ->
-        if isTouch(e)
+        if isTouchDevice()
           # We must pre-cache the positions after they have been rendered, but
           # before anything has changed. Otherwise the extra elements we create
           # during the drag process will interfere.
@@ -142,7 +146,7 @@ do ($=jQuery) ->
         return unless isDragging
 
         showPlaceholder $child
-        if isTouch(e)
+        if isTouchDevice()
           pageY = e.originalEvent.targetTouches[0].pageY
           showGhost pageY
 
@@ -162,7 +166,7 @@ do ($=jQuery) ->
         return unless isDragging
 
         hidePlaceholder $child
-        if isTouch(e)
+        if isTouchDevice()
           hideGhost()
 
           # We must recalculate the positions because in the case where items
