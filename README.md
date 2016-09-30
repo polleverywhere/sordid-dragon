@@ -38,6 +38,15 @@ To register an event handler that fires when a sort/drag is complete, include th
       }
     });
 
+To register an event handler that fires when a sort/drag starts, include the `sortStart` options:
+
+    $(".list").sordidDragon({
+      sortStart: function(event, child) {
+        // event is the raw JavaScript events
+        // child is a jQuery object referencing the child element that was just moved.
+      }
+    });
+
 ## Settings
 
 Option | Type | Default | Description
