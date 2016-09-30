@@ -2,7 +2,7 @@
 # Copyright Poll Everywhere
 # Paul Cortens, Mike Foley and Adam Heath
 # https://github.com/polleverywhere/sordid-dragon
-# Version 2.0.1
+# Version 2.1.0
 
 do ($=jQuery) ->
   $.fn.sordidDragon = (command="enable", options={}) ->
@@ -137,6 +137,7 @@ do ($=jQuery) ->
         e.originalEvent.dataTransfer?.setData "text", ""
         $placeholder = $child.clone()
         isDragging = true
+        options.sortStart?(e, $child)
 
       $handle.on "touchmove.sordidDragon drag.sordidDragon", (e) ->
         return unless isDragging

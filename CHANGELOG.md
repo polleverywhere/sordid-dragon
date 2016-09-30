@@ -1,3 +1,6 @@
+## 2.1.0
+
+- Add sortStart event
 
 ## 2.0.1
 
