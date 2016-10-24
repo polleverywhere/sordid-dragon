@@ -2,10 +2,7 @@
   "name": "sordid-dragon",
   "version": "2.1.0",
   "homepage": "https://github.com/polleverywhere/sordid-dragon",
-  "authors": [
-    "Paul Cortens <paul@polleverywhere.com>",
-    "Mike Foley <mike@polleverywhere.com>"
-  ],
+  "author": "Poll Everywhere <geeks@polleverywhere.com>",
   "description": "jQuery plugin for vertical sorting.",
   "main": "sordid-dragon.jquery.js",
   "moduleType": [
