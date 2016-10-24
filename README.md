@@ -82,12 +82,19 @@ Compile to JavaScript prior to committing CoffeeScript changes:
 Release
 =======
 
-To release to bower:
+### Releasing for Bower
 
- - Bump the version
+- Bump the version
   - Comment at the top of `src/sordid-dragon.jquery.coffee`
   - Version field in `bower.json`
- - Commit and tag as vX.Y.Z
+- Commit and tag as vX.Y.Z
+
+### Releasing for NPM
+
+1. Bump the version `npm version (major|minor|patch)`
+2. Update the `CHANGELOG.md`
+3. Publish to npm `npm publish`
+4. Push all updates to repo `git push --follow-tags`
 
 TODO
 ====
