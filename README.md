@@ -19,7 +19,8 @@ Usage
 
 Call `sordidDragon()` on a jQuery selector to make its immediate children sortable:
 
-    $(".list").sordidDragon();
+    settings = {}
+    $(".list").sordidDragon(settings);
 
 To remove all event listeners (and disable dragging) specify "destroy" as the argument:
 
@@ -27,25 +28,9 @@ To remove all event listeners (and disable dragging) specify "destroy" as the ar
 
 or
 
-    $(".list").sordidDragon("destroy", { handle: ".handle" });
+    settings = {}
+    $(".list").sordidDragon("destroy", settings);
 
-To register an event handler that fires when a sort/drag is complete, include the `sortEnd` option:
-
-    $(".list").sordidDragon({
-      sortEnd: function(event, child) {
-        // event is the raw JavaScript event
-        // child is a jQuery object referencing the child element that was just moved.
-      }
-    });
-
-To register an event handler that fires when a sort/drag starts, include the `sortStart` options:
-
-    $(".list").sordidDragon({
-      sortStart: function(event, child) {
-        // event is the raw JavaScript events
-        // child is a jQuery object referencing the child element that is being moved.
-      }
-    });
 
 ## Settings
 
@@ -54,6 +39,8 @@ Option | Type | Default | Description
 `handle` | `string` (CSS selector) | $(element).children() | Change where you want the dragger handle to be. Defaults to the whole children element.
 `childSelector` | `string` (CSS selector\|jQuery selector) | $(element).children() | To only allow a subset of the child elements to be dragged. <br />NOTE: If a child element excluded by `childSelector` is in the middle of the list, you will be able to drag items from above it to below it or vice versa. However, if the child element excluded by `childSelector` is at the beginning or end of the list, you will not be able to drag items above/below it.
 `ghostContainer` | `string` (html\|CSS selector\|jQuery selector) | $(element) | Change where you want to append the ghost element when the user is dragging the element.
+`sortStart` | `function(event, element)` | undefined | Called when an element starts to be moved.
+`sortEnd` | `function(event, element)` | undefined | Called when an element has stopped being moved.
 
 Dependencies
 ============
