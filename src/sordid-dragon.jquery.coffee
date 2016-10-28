@@ -57,6 +57,7 @@ do ($=jQuery) ->
     hidePlaceholder = ->
       if $placeholder?.is(":visible")
         $placeholder.after $activePlaceholderChild
+        $placeholder.off ".sordidDragon"
         $placeholder.remove()
         $activePlaceholderChild.show()
 
@@ -111,6 +112,15 @@ do ($=jQuery) ->
       else if newPosition < oldPosition
         $besideChild.before $placeholder
 
+    # This allows the browser provided ghose to stay where it's dropped
+    # rather than returning home
+    attachDragOverHandler = ($el) ->
+      $el.on "dragover.sordidDragon", (e) ->
+        return unless isDragging
+
+        e.preventDefault()
+        e.originalEvent.dataTransfer?.dropEffect = "move"
+
     $parent.children(options.childSelector).each (_, child) ->
       $child = $(child)
       $handle = if options.handle
@@ -122,8 +132,8 @@ do ($=jQuery) ->
       $handle.attr "draggable", String(command != "destroy")
 
       # Clear out the existing events (so they aren't duplicated).
-      $handle.off "touchstart.sordidDragon dragstart.sordidDragon touchmove.sordidDragon drag.sordidDragon touchend.sordidDragon dragend.sordidDragon"
-      $child.off "dragenter.sordidDragon"
+      $handle.off ".sordidDragon"
+      $child.off ".sordidDragon"
 
       # If we are destroying, then just move on to the next child rather
       # than setting up any event listeners.
@@ -137,9 +147,11 @@ do ($=jQuery) ->
           calculatePositions()
           $ghost = $child.clone()
           e.preventDefault()
-        # Firefox won't trigger "drag" events without this.
+        # Firefox needs this for drag events, and others to now animate the ghost home
+        e.originalEvent.dataTransfer?.effectAllowed = "move"
         e.originalEvent.dataTransfer?.setData "text", ""
         $placeholder = $child.clone()
+        attachDragOverHandler($placeholder)
         isDragging = true
         options.sortStart?(e, $child)
 
@@ -162,6 +174,8 @@ do ($=jQuery) ->
         return unless isDragging
 
         moveChild $child
+
+      attachDragOverHandler($child)
 
       $handle.on "touchend.sordidDragon dragend.sordidDragon", (e) ->
         return unless isDragging
