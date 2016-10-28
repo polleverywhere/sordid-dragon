@@ -9,8 +9,6 @@ MIN_JS_FILE="dist/sordid-dragon.jquery.min.js"
 COMMENT_LINES=6
 COFFEEBAR="node_modules/.bin/coffeebar"
 
-npm install
-
 $COFFEEBAR --bare --output $JS_FILE.tmp $COFFEE_FILE
 $COFFEEBAR --bare --minify --output $MIN_JS_FILE.tmp $COFFEE_FILE
 

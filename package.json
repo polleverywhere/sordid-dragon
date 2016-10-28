@@ -1,6 +1,36 @@
 {
-  "private": true,
-  "devDependencies": {
-    "coffeebar": "*"
-  }
+  "name": "sordid-dragon",
+  "version": "2.1.0",
+  "description": "jQuery plugin for vertical sorting.",
+  "keywords": [
+    "drag",
+    "drop",
+    "sort",
+    "sortable",
+    "jquery",
+    "sordid",
+    "dragon",
+    "reorder",
+    "touch"
+  ],
+  "main": "dist/sordid-dragon.jquery.js",
+  "dependencies": {
+    "jquery": ">= 1.7.0",
+    "coffeebar": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "sh build.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/polleverywhere/sordid-dragon.git"
+  },
+  "author": "Poll Everywhere <geeks@polleverywhere.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/polleverywhere/sordid-dragon/issues"
+  },
+  "homepage": "https://github.com/polleverywhere/sordid-dragon#readme"
 }
