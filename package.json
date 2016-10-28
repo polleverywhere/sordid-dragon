@@ -14,6 +14,10 @@
     "touch"
   ],
   "main": "dist/sordid-dragon.jquery.js",
+  "files": [
+    "dist/sordid-dragon.jquery.js",
+    "dist/sordid-dragon.jquery.min.js"
+  ],
   "dependencies": {
     "jquery": ">= 1.7.0",
     "coffeebar": "^1.0.0"
