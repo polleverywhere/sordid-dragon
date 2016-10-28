@@ -141,6 +141,7 @@ do ($=jQuery) ->
         e.originalEvent.dataTransfer?.setData "text", ""
         $placeholder = $child.clone()
         isDragging = true
+        options.sortStart?(e, $child)
 
       $handle.on "touchmove.sordidDragon drag.sordidDragon", (e) ->
         return unless isDragging

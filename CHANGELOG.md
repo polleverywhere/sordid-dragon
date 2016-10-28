@@ -1,6 +1,10 @@
+## Unreleased
+
+- Add sortStart event
+
 ## 2.1.0
 
-This Fixes the `fixed` positioned ghost elements inside contain parent elements that have CSS transform attributes applied to them. See commit c3a3032 for more details.
+- This Fixes the `fixed` positioned ghost elements inside contain parent elements that have CSS transform attributes applied to them. See commit c3a3032 for more details.
 
 ## 2.0.1
 
