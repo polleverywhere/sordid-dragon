@@ -2,7 +2,7 @@
 # Copyright Poll Everywhere
 # Paul Cortens, Mike Foley and Adam Heath
 # https://github.com/polleverywhere/sordid-dragon
-# Version 2.1.0
+# Version 2.2.1
 
 do ($=jQuery) ->
 

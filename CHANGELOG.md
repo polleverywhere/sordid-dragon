@@ -1,3 +1,7 @@
+## 2.2.1
+
+- Ensure ghost doesn't return to start point on drop
+
 ## 2.2.0
 
 - Add sortStart event

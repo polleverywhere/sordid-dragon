@@ -1,6 +1,6 @@
 {
   "name": "sordid-dragon",
-  "version": "2.1.0",
+  "version": "2.2.1",
   "homepage": "https://github.com/polleverywhere/sordid-dragon",
   "author": "Poll Everywhere <geeks@polleverywhere.com>",
   "description": "jQuery plugin for vertical sorting.",
